@@ -1,0 +1,28 @@
+{
+  "name": "co-phantom",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --harmony"
+  },
+  "author": "Moshe Kolodny",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^2.3.6",
+    "node-phantom-simple": "^1.2.0"
+  },
+  "devDependencies": {
+    "co": "^3.1.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kolodny/co-phantom.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kolodny/co-phantom/issues"
+  },
+  "homepage": "https://github.com/kolodny/co-phantom"
+}
