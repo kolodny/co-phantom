@@ -2,10 +2,14 @@ var assert = require('assert');
 var co = require('co');
 var phantomCreator = require('../..').create;
 var server = require('../../test-server')();
+var fs = require('fs');
+var Promise = require('bluebird');
+
+var readFile = Promise.promisify(fs.readFile);
 
 var baseUrl = 'http://localhost:' + server.address().port;
 
-describe('opening a url', function() {
+describe('getting page content', function() {
   var phantom, page;
 
   before(function(next) {
@@ -25,12 +29,13 @@ describe('opening a url', function() {
     })();
   });
 
-  it('should open the page', function(next) {
+  it('should return the content', function(next) {
     co(function *() {
       yield page.open(baseUrl + '/file.txt');
-      assert.equal(server.logged.length, 1);
+      var content = (yield page.get('content')).toString();
+      var fileContents = (yield readFile(__dirname + '/../../test-server/public/file.txt')).toString();
+      assert(content.indexOf(fileContents) > -1);
       next();
     })();
   });
-
 });
