@@ -19,6 +19,8 @@ var server = http.createServer(function(request, response) {
 
     if (fs.statSync(filename).isDirectory()) filename += '/index.html';
 
+    server.logged.push(uri);
+
     fs.readFile(filename, "binary", function(err, file) {
       if(err) {
         response.writeHead(500, {"Content-Type": "text/plain"});
@@ -33,5 +35,7 @@ var server = http.createServer(function(request, response) {
     });
   });
 }).listen();
+
+server.logged = [];
 
 module.exports = server;
