@@ -2,14 +2,10 @@ var assert = require('assert');
 var co = require('co');
 var phantomCreator = require('../..').create;
 var server = require('../../test-server')();
-var fs = require('fs');
-var Promise = require('bluebird');
-
-var readFile = Promise.promisify(fs.readFile);
 
 var baseUrl = 'http://localhost:' + server.address().port;
 
-describe('getting page content', function() {
+describe('binding to an event', function() {
   var phantom, page;
 
   before(function(next) {
@@ -29,13 +25,20 @@ describe('getting page content', function() {
     })();
   });
 
-  it('should return the content', function(next) {
+  it('should invoke the callback when the event happens', function(next) {
     co(function *() {
-      yield page.open(baseUrl + '/file.txt');
-      var content = (yield page.get('content')).toString();
-      var fileContents = (yield readFile(__dirname + '/../../test-server/public/file.txt')).toString();
-      assert(content.trim().indexOf(fileContents.trim()) > -1);
+      var ticks = 0;
+      page.on('loadFinished', function() {
+        ticks++;
+      });
+      page.once('loadFinished', function() {
+        ticks++;
+      });
+      yield page.open(baseUrl + '/index.html');
+      yield page.open(baseUrl + '/index.html');
+      assert.equal(ticks, 3);
       next();
     })();
   });
+
 });
