@@ -5,7 +5,7 @@ var server = require('../../test-server')();
 
 var baseUrl = 'http://localhost:' + server.address().port;
 
-describe('binding to an event with once', function() {
+describe('evaluate', function() {
   var phantom, page;
 
   before(function(next) {
@@ -25,18 +25,13 @@ describe('binding to an event with once', function() {
     })();
   });
 
-  it('should invoke the callback no more than once', function(next) {
+  it('should run the function in the page context', function(next) {
     co(function *() {
-      var ticks = 0;
-      page.on('loadFinished', function() { // should happen every time
-        ticks++;
-      });
-      page.once('loadFinished', function() { // should only happen the first time
-        ticks++;
-      });
       yield page.open(baseUrl + '/index.html');
-      yield page.open(baseUrl + '/index.html');
-      assert.equal(ticks, 3);
+      var innerText = yield page.evaluate(function() {
+        return document.body.innerText;
+      });
+      assert.equal(innerText, 'appended text');
       next();
     })();
   });
