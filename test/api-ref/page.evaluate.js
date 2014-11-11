@@ -24,8 +24,10 @@ describe('page#evaluate', function() {
     co(function *() {
       yield env.page.open(env.baseUrl + '/index.html');
       var yeller = '!!';
-      var innerText = yield env.page.evaluate(function(yellerer) {
-        return document.body.innerText + yellerer;
+      var innerText = yield env.page.evaluate(function(yellerer, done) {
+        setTimeout(function() {
+          done(null, document.body.innerText + yellerer);
+        }, 1000);
       }, yeller);
       assert.equal(innerText, 'appended text' + yeller);
       next();
