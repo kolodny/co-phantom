@@ -2,7 +2,7 @@ var assert = require('assert');
 var co = require('co');
 var testHelpers = require('../test-utils/test-helpers');
 
-describe('waiting for an event', function() {
+describe('page#wait', function() {
   var env = {};
   var content = 'This is some content';
 

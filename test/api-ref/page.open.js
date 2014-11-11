@@ -2,7 +2,7 @@ var assert = require('assert');
 var co = require('co');
 var testHelpers = require('../test-utils/test-helpers');
 
-describe('page.open()', function() {
+describe('page#open', function() {
   var env = {};
   var content = 'This is some content';
   var log = [];

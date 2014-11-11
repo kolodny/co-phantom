@@ -2,7 +2,7 @@ var assert = require('assert');
 var co = require('co');
 var testHelpers = require('../test-utils/test-helpers');
 
-describe('binding to an event', function() {
+describe('page#once', function() {
   var env = {};
   var content = 'This is some content';
 
