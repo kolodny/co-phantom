@@ -1,41 +1,24 @@
 var assert = require('assert');
 var co = require('co');
-var phantomCreator = require('../..').create;
-var server = require('../../test-server')();
-var fs = require('fs');
-var Promise = require('bluebird');
+var testHelpers = require('../test-utils/test-helpers');
 
-var readFile = Promise.promisify(fs.readFile);
+describe('page.get("content")', function() {
+  var env = {};
+  var content = 'This is some content';
 
-var baseUrl = 'http://localhost:' + server.address().port;
+  before(testHelpers.before(env, {
+    'GET /index.html': content,
+  }));
 
-describe('getting page content', function() {
-  var phantom, page;
+  after(testHelpers.after(env));
 
-  before(function(next) {
+  it('should return the content of the page', function(next) {
     co(function *() {
-      phantom = yield phantomCreator();
-      page = yield phantom.createPage();
+      yield env.page.open(env.baseUrl + '/index.html');
+      var pageContent = (yield env.page.get('content')).toString();
+      assert(pageContent.trim().indexOf(content.trim()) > -1);
       next();
     })();
   });
 
-  after(function(next) {
-    co(function *() {
-      yield page.close();
-      yield phantom.exit();
-      server.close();
-      next();
-    })();
-  });
-
-  it('should return the content', function(next) {
-    co(function *() {
-      yield page.open(baseUrl + '/file.txt');
-      var content = (yield page.get('content')).toString();
-      var fileContents = (yield readFile(__dirname + '/../../test-server/public/file.txt')).toString();
-      assert(content.trim().indexOf(fileContents.trim()) > -1);
-      next();
-    })();
-  });
 });

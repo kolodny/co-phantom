@@ -1,34 +1,28 @@
 var assert = require('assert');
 var co = require('co');
-var phantomCreator = require('../..').create;
-var server = require('../../test-server')();
+var testHelpers = require('../test-utils/test-helpers');
 
-var baseUrl = 'http://localhost:' + server.address().port;
+describe('page.open()', function() {
+  var env = {};
+  var content = 'This is some content';
+  var log = [];
 
-describe('opening a url', function() {
-  var phantom, page;
+  before(testHelpers.before(env, {
+    'GET /index.html': content,
+  }, function(route) {
+    log.push(route);
+  }));
 
-  before(function(next) {
+  after(testHelpers.after(env));
+
+  it('should make a request for the page', function(next) {
     co(function *() {
-      phantom = yield phantomCreator();
-      page = yield phantom.createPage();
-      next();
-    })();
-  });
-
-  after(function(next) {
-    co(function *() {
-      yield page.close();
-      yield phantom.exit();
-      server.close();
-      next();
-    })();
-  });
-
-  it('should open the page', function(next) {
-    co(function *() {
-      yield page.open(baseUrl + '/file.txt');
-      assert.equal(server.logged.length, 1);
+      var ticks = 0;
+      env.page.on('loadFinished', function() {
+        ticks++;
+      });
+      yield env.page.open(env.baseUrl + '/index.html');
+      assert.equal(log.length, 1);
       next();
     })();
   });

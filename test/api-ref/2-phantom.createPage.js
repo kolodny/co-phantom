@@ -3,13 +3,25 @@ var co = require('co');
 var phantomCreator = require('../..').create;
 
 describe('creating a page', function() {
-  it('should return a page object', function(next) {
+
+  var phantom, page;
+
+  after(function(next) {
     co(function *() {
-      var phantom = yield phantomCreator();
-      var page = yield phantom.createPage();
-      assert.equal(typeof page, 'object')
-      assert.equal(typeof page.goBack, 'function')
+      yield page.close();
+      yield phantom.exit();
       next();
     })();
   });
+
+  it('should return a page object', function(next) {
+    co(function *() {
+      phantom = yield phantomCreator();
+      page = yield phantom.createPage();
+      assert.equal(typeof page, 'object');
+      assert.equal(typeof page.goBack, 'function');
+      next();
+    })();
+  });
+
 });

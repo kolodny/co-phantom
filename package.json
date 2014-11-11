@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha --recursive --harmony"
+    "test": "node_modules/.bin/mocha --harmony 'test/!(test-utils)/*.js'"
   },
   "author": "Moshe Kolodny",
   "license": "MIT",
@@ -13,7 +13,8 @@
   },
   "devDependencies": {
     "co": "^3.1.0",
-    "mocha": "^2.0.1"
+    "mocha": "^2.0.1",
+    "simple-serve": "0.0.2"
   },
   "directories": {
     "test": "test"
