@@ -3,7 +3,7 @@ var fs = require('fs');
 var co = require('co');
 var testHelpers = require('../test-utils/test-helpers');
 
-describe('page#evaluate', function() {
+describe('synchronise page#evaluate', function() {
   var html = [
     '<html><body>',
     '<script src="/jquery.js"></script>',
@@ -24,10 +24,8 @@ describe('page#evaluate', function() {
     co(function *() {
       yield env.page.open(env.baseUrl + '/index.html');
       var yeller = '!!';
-      var innerText = yield env.page.evaluate(function(yellerer, done) {
-        setTimeout(function() {
-          done(null, document.body.innerText + yellerer);
-        }, 1000);
+      var innerText = yield env.page.evaluate(function(yellerer) {
+        return document.body.innerText + yellerer;
       }, yeller);
       assert.equal(innerText, 'appended text' + yeller);
       next();
