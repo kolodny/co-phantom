@@ -3,7 +3,7 @@ var fs = require('fs');
 var co = require('co');
 var testHelpers = require('../test-utils/test-helpers');
 
-describe('page#evaluate', function() {
+describe('synchronise page#evaluate', function() {
   var html = [
     '<html><body>',
     '<script src="/jquery.js"></script>',
