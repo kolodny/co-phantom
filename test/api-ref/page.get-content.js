@@ -1,6 +1,6 @@
 var assert = require('assert');
 var co = require('co');
-var testHelpers = require('../test-utils/test-helpers');
+var testHelpers = require('../../test-utils/test-helpers');
 
 describe('page.get("content")', function() {
   var env = {};

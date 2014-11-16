@@ -1,7 +1,7 @@
 var assert = require('assert');
 var fs = require('fs');
 var co = require('co');
-var testHelpers = require('../test-utils/test-helpers');
+var testHelpers = require('../../test-utils/test-helpers');
 
 describe('asynchronise page#evaluate', function() {
   var html = [
@@ -10,7 +10,7 @@ describe('asynchronise page#evaluate', function() {
     '<script>$("<div>").text("appended text").appendTo("body")</script>',
     '</body></html>'
   ].join('\n');
-  var jquery = fs.readFileSync(__dirname + '/../test-utils/jquery.js').toString();
+  var jquery = fs.readFileSync(__dirname + '/../../test-utils/jquery.js').toString();
   var env = {};
 
   before(testHelpers.before(env, {
@@ -21,7 +21,6 @@ describe('asynchronise page#evaluate', function() {
   after(testHelpers.after(env));
 
   it('should run the function in the page context', function(next) {
-    this.timeout(5000);
     co(function *() {
       yield env.page.open(env.baseUrl + '/index.html');
       var yeller = '!!';

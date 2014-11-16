@@ -1,6 +1,6 @@
 var assert = require('assert');
 var co = require('co');
-var testHelpers = require('../test-utils/test-helpers');
+var testHelpers = require('../../test-utils/test-helpers');
 
 describe('page#wait', function() {
   var env = {};
@@ -13,7 +13,6 @@ describe('page#wait', function() {
   after(testHelpers.after(env));
 
   it('should wait until that event triggers', function(next) {
-    this.timeout(5000);
     co(function *() {
       yield env.page.open(env.baseUrl + '/index.html');
       yield env.page.evaluate(function() {

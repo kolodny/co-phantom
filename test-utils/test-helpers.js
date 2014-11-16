@@ -1,6 +1,6 @@
 var co = require('co');
 var simpleServe = require('simple-serve');
-var phantomCreator = require('../..').create;
+var phantomCreator = require('..').create;
 
 exports.before = function(env, routes, callback) {
   return function(next) {
