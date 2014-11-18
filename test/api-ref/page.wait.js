@@ -15,12 +15,18 @@ describe('page#wait', function() {
   it('should wait until that event triggers', function(next) {
     co(function *() {
       yield env.page.open(env.baseUrl + '/index.html');
-      yield env.page.evaluate(function() {
+
+      // we need to set up this wait now because it may happen before
+      // we get a chance to set up after evaluate
+      var waitFor = env.page.wait('consoleMessage'); // race condition
+      var returnVal = yield env.page.evaluate(function() {
         setTimeout(function() {
           console.log('done waiting');
         }, 250);
+        return 'return val';
       });
-      yield env.page.wait('consoleMessage');
+      assert.equal(returnVal, 'return val');
+      yield waitFor;
       next();
     })();
 

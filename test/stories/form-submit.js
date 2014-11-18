@@ -21,11 +21,12 @@ describe('submitting a form', function() {
     co(function *() {
       var name = 'Moshe Kolodny';
       yield env.page.open(env.baseUrl + '/index.html');
+      var waitFor = env.page.wait('loadFinished');
       yield env.page.evaluate(function(name) {
         document.querySelector('#name').value = name
         document.querySelector('#form').submit();
       }, name);
-      yield env.page.wait('loadFinished');
+      yield waitFor;
       var text = yield env.page.evaluate(function() {
         return document.body.innerText;
       });
