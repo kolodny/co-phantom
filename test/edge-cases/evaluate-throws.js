@@ -12,38 +12,68 @@ describe('page#evaluate', function() {
 
   after(testHelpers.after(env));
 
-  it('should catch synchronise errors', function(next) {
-    co(function *() {
-      yield env.page.open(env.baseUrl + '/index.html');
-      var yeller = '!!';
-      var caught;
-      try {
-        yield env.page.evaluate(function(yellerer) {
-          throw 'catch me';
-        }, yeller);
-      } catch(e) {
-        caught = e;
-      }
-      assert.equal(caught, 'catch me');
-      next();
-    })();
+  describe('run synchronously', function() {
+    it('should catch errors', function(next) {
+      co(function *() {
+        yield env.page.open(env.baseUrl + '/index.html');
+        var yeller = '!!';
+        var caught;
+        try {
+          yield env.page.evaluate(function(yellerer) {
+            throw 'catch me';
+          }, yeller);
+        } catch(e) {
+          caught = e;
+        }
+        assert.equal(caught, 'catch me');
+        next();
+      })();
+    });
   });
 
-  it('should catch asynchronise errors', function(next) {
-    co(function *() {
-      yield env.page.open(env.baseUrl + '/index.html');
-      var yeller = '!!';
-      var caught;
-      try {
-        yield env.page.evaluate(function(yellerer, next) {
-          next('catch me')
-        }, yeller);
-      } catch(e) {
-        caught = e;
-      }
-      assert.equal(caught, 'catch me');
-      next();
-    })();
+  describe('run asynchronously', function() {
+
+    it('should catch if immediately rejected', function(next) {
+      co(function *() {
+        yield env.page.open(env.baseUrl + '/index.html');
+        var yeller = '!!';
+        var caught;
+        try {
+          yield env.page.evaluate(function(yellerer, next) {
+            next('catch me');
+          }, yeller);
+        } catch(e) {
+          caught = e;
+        }
+        assert.equal(caught, 'catch me');
+        next();
+      })();
+    });
+
+    it('should catch if immediately thrown', function(next) {
+      co(function *() {
+        yield env.page.open(env.baseUrl + '/index.html');
+        var yeller = '!!';
+        var caught;
+        try {
+          yield env.page.evaluate(function(yellerer, next) {
+            throw 'catch me';
+          }, yeller);
+        } catch(e) {
+          caught = e;
+        }
+        assert.equal(caught, 'catch me');
+        next();
+      })();
+    });
+
+
   });
 
 });
+
+function sleep(ms) {
+  return function(cb) {
+    setTimeout(cb,ms)
+  }
+}
