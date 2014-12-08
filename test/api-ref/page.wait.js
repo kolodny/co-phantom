@@ -18,7 +18,6 @@ describe('page#wait', function() {
 
       // we need to set up this wait now because it may happen before
       // we get a chance to set up after evaluate
-      var waitFor = env.page.wait('consoleMessage'); // race condition
       var returnVal = yield env.page.evaluate(function() {
         setTimeout(function() {
           console.log('done waiting');
@@ -26,6 +25,7 @@ describe('page#wait', function() {
         return 'return val';
       });
       assert.equal(returnVal, 'return val');
+      var waitFor = env.page.wait('consoleMessage'); // race condition
       yield waitFor;
       next();
     })();
