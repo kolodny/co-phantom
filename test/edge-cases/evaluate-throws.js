@@ -6,11 +6,11 @@ var testHelpers = require('../../test-utils/test-helpers');
 describe('page#evaluate', function() {
   var env = {};
 
-  before(testHelpers.before(env, {
+  beforeEach(testHelpers.before(env, {
     'GET /index.html': '<html><body>test</body></html>'
   }));
 
-  after(testHelpers.after(env));
+  afterEach(testHelpers.after(env));
 
   describe('run synchronously', function() {
     it('should catch errors', function(next) {
